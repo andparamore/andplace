@@ -18,6 +18,8 @@ public sealed class MenuContext : DbContext
     public DbSet<IngredientModel> Ingredients { get; set; } = null!;
 
     public DbSet<IngredientAccountingModel> IngredientsAccounting { get; set; } = null!;
+
+    public DbSet<CompositionModel> Compositions { get; set; } = null!;
  
     public MenuContext()
     {
@@ -26,7 +28,7 @@ public sealed class MenuContext : DbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=menudb;Username=postgres;Password=and");
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=db_menu;Username=postgres;Password=2002");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,8 +36,9 @@ public sealed class MenuContext : DbContext
         _ = modelBuilder
             .Entity<MenuSectionModel>(SetPropertyMenuSections)
             .Entity<ProductModel>(SetPropertyProducts)
-            .Entity<IngredientModel>(SetPropertyIngredients);
-
+            .Entity<IngredientModel>(SetPropertyIngredients)
+            .Entity<IngredientAccountingModel>(SetPropertyIngredientsAccounting)
+            .Entity<CompositionModel>(SetPropertyComposition);
     }
 
     private void SetPropertyMenuSections(EntityTypeBuilder<MenuSectionModel> entity)
@@ -85,12 +88,6 @@ public sealed class MenuContext : DbContext
             .HasForeignKey(p => p.MenuSectionId)
             .OnDelete(DeleteBehavior.SetNull)
             .HasConstraintName("fk_menu_section_products");
-                
-        _ = entity.Property(e => e.Compositions)
-            .HasColumnName("compositions")
-            .HasConversion(new ValueConverter<IEnumerable<CompositionModel>,string>(
-                v => JsonConvert.SerializeObject(v), 
-                v => JsonConvert.DeserializeObject<List<CompositionModel>>(v) ?? new List<CompositionModel>()));
     }
 
     private void SetPropertyIngredients(EntityTypeBuilder<IngredientModel> entity)
@@ -108,10 +105,7 @@ public sealed class MenuContext : DbContext
         _ = entity.Property(e => e.Name)
             .HasMaxLength(50)
             .HasColumnName("ingredients_name");
-        
-        _ = entity.Property(e => e.IngredientAccounting)
-            .HasColumnName("ingredient_accounting");
-        
+
         _ = entity.HasOne(i => i.IngredientAccounting)
             .WithOne(ia => ia.Ingredient)
             .HasForeignKey<IngredientAccountingModel>(ia => ia.IngredientId);
@@ -130,5 +124,25 @@ public sealed class MenuContext : DbContext
 
         _ = entity.Property(e => e.IngredientId)
             .HasColumnName("ingredient_id");
+    }
+
+    private void SetPropertyComposition(EntityTypeBuilder<CompositionModel> entity)
+    {
+        _ = entity.ToTable("compositions");
+
+        _ = entity.Property(e => e.Id)
+            .ValueGeneratedNever()
+            .HasColumnName("id");
+
+        _ = entity.Property(e => e.Count)
+            .HasColumnName("composition_id");
+
+        _ = entity.HasOne(c => c.Ingredient)
+            .WithMany(i => i.Compositions)
+            .HasForeignKey(c => c.IngredientId);
+
+        _ = entity.HasOne(c => c.Product)
+            .WithMany(p => p.Compositions)
+            .HasForeignKey(c => c.ProductId);
     }
 }

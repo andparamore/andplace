@@ -10,7 +10,7 @@ public class IngredientModel
     
     public string Unit { get; init; } = string.Empty;
 
-    public IngredientAccountingModel IngredientAccounting { get; set; } = new IngredientAccountingModel();
+    public IngredientAccountingModel? IngredientAccounting { get; set; }
     
     public IEnumerable<CompositionModel>? Compositions { get; set; }
 }
