@@ -1,7 +1,6 @@
 using AndPlace.Data.Domain.Context;
-using AndPlace.Data.Domain.DTO.Menu;
+using AndPlace.Data.Domain.Models.Accounting;
 using AndPlace.Data.Domain.Models.Menu;
-using AndPlace.Infrastructure.Interface.Helpers.Adapters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,8 +13,7 @@ public class QueryMenuController : Controller
     #region MenuSections
 
     [HttpGet("menuSection/all")]
-    public async Task<ActionResult<List<MenuSectionModel>>> GetAllMenuSections(
-        IMenuSectionAdapter menuSectionAdapter)
+    public async Task<ActionResult<List<MenuSectionModel>>> GetAllMenuSections()
     {
         await using var ctx = new MenuContext();
         if (ctx.MenuSections != null)
@@ -29,9 +27,7 @@ public class QueryMenuController : Controller
     }
     
     [HttpGet("menuSection/{id}")]
-    public async Task<ActionResult<List<MenuSectionModel>>> GetMenuSectionById(
-        IMenuSectionAdapter menuSectionAdapter,
-        Guid id)
+    public async Task<ActionResult<MenuSectionModel>> GetMenuSectionById(Guid id)
     {
         await using var ctx = new MenuContext();
         if (ctx.MenuSections != null)
@@ -42,7 +38,7 @@ public class QueryMenuController : Controller
                 .Include(s => s.Products)!
                 .ThenInclude(p => p.Compositions)!
                 .ThenInclude(c => c.Ingredient)
-                .ToListAsync();
+                .FirstAsync();
         }
 
         throw new InvalidOperationException("Menu sections table not found");
@@ -53,8 +49,7 @@ public class QueryMenuController : Controller
     #region Product
 
     [HttpGet("product/all")]
-    public async Task<ActionResult<List<ProductModel>>> GetAllProducts(
-        IProductAdapter productAdapter)
+    public async Task<ActionResult<List<ProductModel>>> GetAllProducts()
     {
         await using var ctx = new MenuContext();
         if (ctx.Products != null)
@@ -68,9 +63,7 @@ public class QueryMenuController : Controller
     }
     
     [HttpGet("product/{id}")]
-    public async Task<ActionResult<List<ProductModel>>> GetProductById(
-        IProductAdapter productAdapter,
-        Guid id)
+    public async Task<ActionResult<ProductModel>> GetProductById(Guid id)
     {
         await using var ctx = new MenuContext();
         if (ctx.Products != null)
@@ -81,7 +74,7 @@ public class QueryMenuController : Controller
                 .Include(p => p.MenuSection)
                 .Include(p => p.Compositions)!
                 .ThenInclude(c => c.Ingredient)
-                .ToListAsync();
+                .FirstAsync();
         }
 
         throw new InvalidOperationException("Products table not found");
@@ -89,4 +82,37 @@ public class QueryMenuController : Controller
 
     #endregion
     
+    #region IngredientAccounting
+
+    [HttpGet("ingredientAccounting/all")]
+    public async Task<ActionResult<List<IngredientAccountingModel>>> GetAllIngredientsAccounting()
+    {
+        await using var ctx = new MenuContext();
+        if (ctx.Products != null)
+        {
+            return await ctx.IngredientsAccounting
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        throw new InvalidOperationException("IngredientAccounting table not found");
+    }
+    
+    [HttpGet("ingredientAccounting/{id}")]
+    public async Task<ActionResult<IngredientAccountingModel>> GetIngredientAccountingById(Guid id)
+    {
+        await using var ctx = new MenuContext();
+        if (ctx.Products != null)
+        {
+            return await ctx.IngredientsAccounting
+                .AsNoTracking()
+                .Where(p => p.Id == id)
+                .Include(i => i.Ingredient)
+                .FirstAsync();
+        }
+
+        throw new InvalidOperationException("IngredientAccounting table not found");
+    }
+
+    #endregion
 }

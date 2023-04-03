@@ -1,14 +1,9 @@
 using System.Text.Json.Serialization;
-using AndPlace.Api.Helpers.Adapters;
-using AndPlace.Data.Domain.DTO;
-using AndPlace.Infrastructure.Interface.Helpers.Adapters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddScoped<IProductAdapter, ProductAdapter>();
-builder.Services.AddScoped<IMenuSectionAdapter, MenuSectionAdapter>();
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 

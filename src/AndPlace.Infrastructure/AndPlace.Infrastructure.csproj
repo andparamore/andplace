@@ -10,4 +10,8 @@
       <ProjectReference Include="..\AndPlace.Data\AndPlace.Data.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Interface\Helpers" />
+    </ItemGroup>
+
 </Project>
