@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using AndPlace.Api.Helpers.Adapters;
 using AndPlace.Data.Domain.DTO;
 using AndPlace.Infrastructure.Interface.Helpers.Adapters;
@@ -8,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IProductAdapter, ProductAdapter>();
 builder.Services.AddScoped<IMenuSectionAdapter, MenuSectionAdapter>();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

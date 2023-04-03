@@ -1,11 +1,7 @@
-using AndPlace.Data.Domain.Enums;
-using AndPlace.Data.Domain.Models;
 using AndPlace.Data.Domain.Models.Accounting;
 using AndPlace.Data.Domain.Models.Menu;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Newtonsoft.Json;
 
 namespace AndPlace.Data.Domain.Context;
 

@@ -1,6 +1,4 @@
-using AndPlace.Data.Domain.DTO;
 using AndPlace.Data.Domain.DTO.Menu;
-using AndPlace.Data.Domain.Models;
 using AndPlace.Data.Domain.Models.Menu;
 using AndPlace.Infrastructure.Interface.Helpers.Adapters;
 

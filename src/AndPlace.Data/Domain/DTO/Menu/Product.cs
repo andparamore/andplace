@@ -1,4 +1,3 @@
-using AndPlace.Data.Domain.Models;
 using AndPlace.Data.Domain.Models.Menu;
 
 namespace AndPlace.Data.Domain.DTO.Menu;

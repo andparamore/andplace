@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using AndPlace.Data.Domain.Enums;
 
 namespace AndPlace.Data.Domain.Models.Menu;
@@ -12,5 +13,6 @@ public class MenuSectionModel
     
     public DepartmentManufacturer DepartmentManufacturer { get; set; }
     
+    [IgnoreDataMember]
     public IEnumerable<ProductModel>? Products { get; set; }
 }

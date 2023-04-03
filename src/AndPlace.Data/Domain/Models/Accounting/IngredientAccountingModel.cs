@@ -6,7 +6,7 @@ public class IngredientAccountingModel
     
     public Guid IngredientId { get; set; }
 
-    public IngredientModel Ingredient { get; set; } = new IngredientModel();
+    public IngredientModel? Ingredient { get; set; }
     
     public int Count { get; set; }
 }

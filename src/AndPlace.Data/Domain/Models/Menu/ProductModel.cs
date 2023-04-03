@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace AndPlace.Data.Domain.Models.Menu;
 
 public class ProductModel
@@ -10,9 +12,10 @@ public class ProductModel
     
     public Guid MenuSectionId { get; set; }
 
+    [IgnoreDataMember]
     public MenuSectionModel? MenuSection { get; set; } 
-
-    public IEnumerable<CompositionModel> Compositions { get; set; } = new List<CompositionModel>();
+    
+    public IEnumerable<CompositionModel>? Compositions { get; set; }
 
     public decimal Price { get; set; }
 }
